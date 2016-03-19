@@ -1,0 +1,8 @@
+{
+    "name": "spad/treinabo",
+    "description": "Trein abo ding.",
+    "license": "MIT",
+    "require": {
+        "symfony/console": "^3.0"
+    }
+}
