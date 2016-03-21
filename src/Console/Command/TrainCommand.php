@@ -138,6 +138,10 @@ class TrainCommand extends Command
             $num_days[] = [$first_date->format('Y-m-d'), $num];
         }
 
+        if (empty($num_days)) {
+            throw new \Exception('No dates to show?', 3);
+        }
+
         return $num_days;
     }
 }
