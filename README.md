@@ -8,25 +8,25 @@ Usage
 -----
 
 ```
-./trainabo.php
+php trainabo.php
 ```
 
 This lists the number of working days from today up to 14 days from today.
 
 ```
-./trainabo.php 2016-04-01
+php trainabo.php 2016-04-01
 ```
 
 This lists the number of working days from April 1st up to April 14th.
 
 ```
-./trainabo.php 2016-04-01 -e 4
+php trainabo.php 2016-04-01 -e 4
 ```
 
 This lists the number of working days from April 1st up to April 4th.
 
 ```
-./trainabo.php 2016-04-01 -e 4 -d holidays_example.csv
+php trainabo.php 2016-04-01 -e 4 -d holidays_example.csv
 ```
 
 This lists the number of working days from April 1st up to April 4th.
