@@ -27,12 +27,26 @@ class TrainCommand extends Command
     private $plus_days;
 
     /**
+     * Total price of 1 month of subscription
+     *
+     * @var float
+     */
+    private $subscription_price;
+
+    /**
+     * Total costs for 1 working day
+     *
+     * @var float
+     */
+    private $costs_per_day;
+
+    /**
      * @inheritdoc
      */
     protected function configure()
     {
         $this->setName('train')
-            ->setDescription('Lists best dates to buy the train abo')
+            ->setDescription('Lists best dates to buy the train subscription')
             ->addArgument(
                 'start-date',
                 InputArgument::OPTIONAL,
@@ -51,6 +65,18 @@ class TrainCommand extends Command
                 'd',
                 InputOption::VALUE_OPTIONAL,
                 'CSV file with holidays'
+            )
+            ->addOption(
+                'subscription-price',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                'Total price of the subscription'
+            )
+            ->addOption(
+                'costs-per-day',
+                'c',
+                InputOption::VALUE_OPTIONAL,
+                'Total costs per day'
             );
     }
 
@@ -61,14 +87,25 @@ class TrainCommand extends Command
     {
         $this->start_date = Carbon::parse($input->getArgument('start-date'));
         $this->plus_days = $input->getOption('extra-days');
+        $this->subscription_price = $input->getOption('subscription-price');
+        $this->costs_per_day = $input->getOption('costs-per-day');
 
         $holidays = $input->getOption('holidays');
         if ($holidays) {
             Carbon::setHolidaysCsv($holidays);
         }
 
+        if ($this->subscription_price) {
+            $output->writeln('Subscription price:' . $this->subscription_price);
+        }
+        $headers = ['Start date', 'Number of working days'];
+        if ($this->costs_per_day) {
+            $headers[] = 'Total costs';
+            $headers[] = '';
+        }
+
         $table = new Table($output);
-        $table->setHeaders(array('Start date', 'Number of working days'))
+        $table->setHeaders($headers)
             ->setRows($this->calculateNumDays())
             ->render();
     }
@@ -135,7 +172,19 @@ class TrainCommand extends Command
             // Drop first day
             array_shift($dates);
 
-            $num_days[] = [$first_date->format('Y-m-d'), $num];
+            $row = [$first_date->format('Y-m-d'), $num];
+
+            if ($this->costs_per_day) {
+                $costs = $num * $this->costs_per_day;
+                $row[] = $costs;
+                if ($costs > $this->subscription_price) {
+                    $row[] = '<fg=green;options=bold> 🗸 </>';
+                }
+                else {
+                    $row[] = '<fg=red;options=bold> 🗶 </>';
+                }
+            }
+            $num_days[] = $row;
         }
 
         if (empty($num_days)) {

@@ -31,3 +31,12 @@ php trainabo.php 2016-04-01 -e 4 -d holidays_example.csv
 
 This lists the number of working days from April 1st up to April 4th.
 And it excludes any dates found in the file `holidays_example.csv`.
+
+```
+./treinabo.php 2016-04-01 -p 142 -c 9 -d holidays_example.csv
+```
+
+This lists the number of working days from April 1st up to April 14th.
+And it excludes any dates found in the file `holidays_example.csv`.
+It shows the total costs per starting-day and whether or not it is cheaper
+to buy the subscription.
